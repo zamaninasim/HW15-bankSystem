@@ -15,16 +15,15 @@ public class Account {
     private Long accountNumber;
     @Column(name ="cart_number")
     private Long cartNumber;
-    @Column(name ="opening_date")
-    private Date openingDate;
     @Column(name ="account_type")
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
-    @Column(name ="account_type")
     private Long balance;
-    @Column(name ="account_type")
     private Integer cvv2;
-    @Column(name ="account_type")
+    @Column(name ="opening_date")
+    @Temporal(TemporalType.DATE)
+    private Date openingDate;
+    @Column(name ="expiration_date")
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
     @ManyToOne(cascade = CascadeType.ALL)
