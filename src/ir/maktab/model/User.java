@@ -20,5 +20,6 @@ public class User {
     private Date userCreationDate;
     private Date updateInfoDate;
     private Map<Date,String> updates;
+    private List<Transaction> threeLastTransaction;
 
 }
