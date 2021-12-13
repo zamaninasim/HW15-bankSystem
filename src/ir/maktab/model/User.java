@@ -23,7 +23,7 @@ public class User {
     private String lastName;
     @Column(name ="family")
     private String nationalCode;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", fetch = FetchType.EAGER)
     private List<User> accounts;
     private UserType userType;
     @CreationTimestamp
