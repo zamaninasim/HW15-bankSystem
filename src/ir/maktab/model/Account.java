@@ -28,4 +28,5 @@ public class Account {
     private Date expirationDate;
     @ManyToOne(cascade = CascadeType.ALL)
     private User user;
+
 }

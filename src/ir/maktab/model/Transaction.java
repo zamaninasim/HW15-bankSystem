@@ -23,4 +23,6 @@ public class Transaction {
     private Long amount;
     @CreationTimestamp
     private Date date;
+
+
 }
