@@ -17,7 +17,7 @@ public class User {
     private String nationalCode;
     private List<User> accounts;
     private UserType userType;
-    private Date openingDate;
+    private Date userCreationDate;
     private Date updateInfoDate;
     private Map<Date,String> updates;
 
