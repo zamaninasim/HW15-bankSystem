@@ -1,6 +1,6 @@
 package ir.maktab.model;
 
-import ir.maktab.UserType;
+import ir.maktab.enumeration.UserType;
 import lombok.Data;
 
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package ir.maktab;
+package ir.maktab.model;
 import lombok.Data;
 
 import javax.persistence.Entity;
