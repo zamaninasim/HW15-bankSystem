@@ -27,4 +27,6 @@ public class Account {
     @Column(name ="account_type")
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User user;
 }

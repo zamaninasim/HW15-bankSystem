@@ -17,20 +17,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name ="name")
+    @Column(name = "first_name")
     private String firstName;
-    @Column(name ="name")
+    @Column(name = "last_name")
     private String lastName;
-    @Column(name ="family")
+    @Column(name = "national_code")
     private String nationalCode;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "role", fetch = FetchType.EAGER)
-    private List<User> accounts;
+    @Column(name = "user_type")
+    @Enumerated(EnumType.STRING)
     private UserType userType;
+    @Column(name = "user_creation_date")
     @CreationTimestamp
     private Date userCreationDate;
+    @Column(name = "update_info_date")
     @UpdateTimestamp
     private Date updateInfoDate;
-    private Map<Date,String> updates;
-    @OneToMany
-    private List<Transaction> threeLastTransaction;
+    @Transient
+    private Map<Date, String> updates;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Account> accounts;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Transaction> Transactions;
 }
