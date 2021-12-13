@@ -11,13 +11,13 @@
 
         <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
-        <property name="hbm2ddl.auto">creat</property>
+        <property name="hbm2ddl.auto">create</property>
         <property name="connection.pool_size">1</property>
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
         <mapping class="ir.maktab.model.Account"/>
-        <mapping class="ir.maktab.model.Transaction"/>
+        <mapping class="ir.maktab.model.Operation"/>
         <mapping class="ir.maktab.model.User"/>
     </session-factory>
 </hibernate-configuration>

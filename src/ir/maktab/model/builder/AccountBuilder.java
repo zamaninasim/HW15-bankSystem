@@ -2,9 +2,12 @@ package ir.maktab.model.builder;
 
 import ir.maktab.enumeration.AccountType;
 import ir.maktab.model.Account;
+import ir.maktab.model.Operation;
 import ir.maktab.model.User;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public final class AccountBuilder {
     private Integer id;
@@ -15,6 +18,8 @@ public final class AccountBuilder {
     private Integer cvv2;
     private Date openingDate;
     private Date expirationDate;
+    //, mappedBy = "account"
+    private List<Operation> operations = new ArrayList<>();
     private User user;
 
     private AccountBuilder() {
@@ -64,6 +69,11 @@ public final class AccountBuilder {
         return this;
     }
 
+    public AccountBuilder withOperations() {
+        this.operations = new ArrayList<>();
+        return this;
+    }
+
     public AccountBuilder withUser(User user) {
         this.user = user;
         return this;
@@ -79,6 +89,7 @@ public final class AccountBuilder {
         account.setCvv2(cvv2);
         account.setOpeningDate(openingDate);
         account.setExpirationDate(expirationDate);
+        account.setOperations(operations);
         account.setUser(user);
         return account;
     }

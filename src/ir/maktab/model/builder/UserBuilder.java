@@ -2,9 +2,9 @@ package ir.maktab.model.builder;
 
 import ir.maktab.enumeration.UserType;
 import ir.maktab.model.Account;
-import ir.maktab.model.Transaction;
 import ir.maktab.model.User;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,6 @@ public final class UserBuilder {
     private Date updateInfoDate;
     private Map<Date, String> updates;
     private List<Account> accounts;
-    private List<Transaction> Transactions;
 
     private UserBuilder() {
     }
@@ -68,13 +67,8 @@ public final class UserBuilder {
         return this;
     }
 
-    public UserBuilder withAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-        return this;
-    }
-
-    public UserBuilder withTransactions(List<Transaction> Transactions) {
-        this.Transactions = Transactions;
+    public UserBuilder withAccounts() {
+        this.accounts = new ArrayList<>();
         return this;
     }
 
@@ -89,7 +83,6 @@ public final class UserBuilder {
         user.setUpdateInfoDate(updateInfoDate);
         user.setUpdates(updates);
         user.setAccounts(accounts);
-        user.setTransactions(Transactions);
         return user;
     }
 }

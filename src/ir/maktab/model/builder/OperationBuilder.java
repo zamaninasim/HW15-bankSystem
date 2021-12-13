@@ -2,60 +2,54 @@ package ir.maktab.model.builder;
 
 import ir.maktab.enumeration.TransactionType;
 import ir.maktab.model.Account;
-import ir.maktab.model.Transaction;
-import ir.maktab.model.User;
+import ir.maktab.model.Operation;
 
 import java.util.Date;
 
-public final class TransactionBuilder {
+public final class OperationBuilder {
     private Integer id;
-    private User user;
+    /*    @ManyToOne(cascade = CascadeType.ALL)
+            private User user;*/
     private Account account;
     private TransactionType transactionType;
     private Long amount;
     private Date date;
 
-    private TransactionBuilder() {
+    private OperationBuilder() {
     }
 
-    public static TransactionBuilder aTransaction() {
-        return new TransactionBuilder();
+    public static OperationBuilder aTransaction() {
+        return new OperationBuilder();
     }
 
-    public TransactionBuilder withId(Integer id) {
+    public OperationBuilder withId(Integer id) {
         this.id = id;
         return this;
     }
 
-    public TransactionBuilder withUser(User user) {
-        this.user = user;
-        return this;
-    }
-
-    public TransactionBuilder withAccount(Account account) {
+    public OperationBuilder withAccount(Account account) {
         this.account = account;
         return this;
     }
 
-    public TransactionBuilder withTransactionType(TransactionType transactionType) {
+    public OperationBuilder withTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
         return this;
     }
 
-    public TransactionBuilder withAmount(Long amount) {
+    public OperationBuilder withAmount(Long amount) {
         this.amount = amount;
         return this;
     }
 
-    public TransactionBuilder withDate(Date date) {
+    public OperationBuilder withDate(Date date) {
         this.date = date;
         return this;
     }
 
-    public Transaction build() {
-        Transaction transaction = new Transaction();
+    public Operation build() {
+        Operation transaction = new Operation();
         transaction.setId(id);
-        transaction.setUser(user);
         transaction.setAccount(account);
         transaction.setTransactionType(transactionType);
         transaction.setAmount(amount);

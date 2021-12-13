@@ -9,20 +9,15 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Transaction {
+public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne(cascade = CascadeType.ALL)
-    private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
     private Account account;
-    @Column(name = "transaction_type")
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     private Long amount;
     @CreationTimestamp
     private Date date;
-
-
 }
