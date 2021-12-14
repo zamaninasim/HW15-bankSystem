@@ -19,4 +19,9 @@ public class UserService {
         User userWhitThisLastname = userDao.findUserByLastname(lastname);
         return userWhitThisLastname;
     }
+
+    public User readUserByNationalCode(String nationalCode) {
+        User userWhitThisNationalCode = userDao.findUserByNationalCode(nationalCode);
+        return userWhitThisNationalCode;
+    }
 }

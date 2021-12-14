@@ -2,6 +2,7 @@ package ir.maktab.model;
 
 import ir.maktab.enumeration.AccountType;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,6 +27,21 @@ public class Account {
     private Date expirationDate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
     private List<Operation> operations = new ArrayList<>();
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private User user;
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber=" + accountNumber +
+                ", cartNumber=" + cartNumber +
+                ", accountType=" + accountType +
+                ", balance=" + balance +
+                ", cvv2=" + cvv2 +
+                ", openingDate=" + openingDate +
+                ", expirationDate=" + expirationDate +
+                ", user=" + user +
+                '}';
+    }
 }

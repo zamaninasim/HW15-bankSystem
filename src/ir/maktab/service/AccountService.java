@@ -6,7 +6,7 @@ import ir.maktab.model.Account;
 public class AccountService {
     AccountDao accountDao = new AccountDao();
 
-    public void saveUserService(Account account) {
+    public void saveAccountService(Account account) {
         accountDao.saveAccount(account);
     }
 

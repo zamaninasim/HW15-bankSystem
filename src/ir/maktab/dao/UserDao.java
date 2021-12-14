@@ -36,4 +36,12 @@ public class UserDao {
         User user = list.get(0);
         return user;
     }
+
+    public User findUserByNationalCode(String nationalCode){
+        Criteria criteria = session.createCriteria(User.class);
+        criteria.add(Restrictions.eq("nationalCode",nationalCode));
+        List<User> list = criteria.list();
+        User user = list.get(0);
+        return user;
+    }
 }

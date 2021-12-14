@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@ToString
 @Entity
 public class User {
     @Id
@@ -32,4 +31,14 @@ public class User {
     private Map<Date, String> updates;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Account> accounts = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", nationalCode='" + nationalCode + '\'' +
+                '}';
+    }
 }
