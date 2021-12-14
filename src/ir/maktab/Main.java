@@ -1,85 +1,57 @@
 package ir.maktab;
 
-import ir.maktab.enumeration.AccountType;
-import ir.maktab.enumeration.TransactionType;
 import ir.maktab.enumeration.UserType;
-import ir.maktab.model.Account;
-import ir.maktab.model.Operation;
 import ir.maktab.model.User;
-import ir.maktab.model.builder.AccountBuilder;
-import ir.maktab.model.builder.OperationBuilder;
 import ir.maktab.model.builder.UserBuilder;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
+import ir.maktab.service.UserService;
 
-import java.util.Date;
+import java.util.Scanner;
 
 public class Main {
-    static SessionFactory sessionFactory = new Configuration()
-            .configure().buildSessionFactory();
+    static final Scanner scanner = new Scanner(System.in);
+    static final UserService userService = new UserService();
 
     public static void main(String[] args) {
+        System.out.println("1)Create user\n2)find user by firstname\n3)find by lastname\n" +
+                "3)find by cart number\n4)Create and assign an account\n5)Withdraw and deposit operations");
+        Integer operations = scanner.nextInt();
+        switch (operations) {
+            case 1:
+                User user = creatUser();
+                userService.saveUserService(user);
+                break;
+            case 2:
+                System.out.println("enter firstname:");
+                String firstname = scanner.next();
+                User userWhitThisFirstname = userService.readUserByFirstname(firstname);
+                System.out.println(userWhitThisFirstname);
+                break;
+            case 3:
+                System.out.println("enter lastname:");
+                String lastname = scanner.next();
+                User userWhitThisLastname = userService.readUserByLastname(lastname);
+                System.out.println(userWhitThisLastname);
+                break;
+
+        }
+    }
+
+    private static User creatUser() {
+        System.out.println("enter user info:(firstname,lastname,nationalCode");
+        //TODO
+        String userInfo = scanner.next();
+        String[] splitedInfo = userInfo.split(",");
+        String firstname = splitedInfo[0];
+        String lastname = splitedInfo[1];
+        String nationalCode = splitedInfo[2];
+
         User user = UserBuilder.anUser()
-                .withFirstName("nasim")
-                .withLastName("zamani")
-                .withNationalCode("0018715834").withUserType(UserType.GOOD)
+                .withFirstName(firstname)
+                .withLastName(lastname)
+                .withNationalCode(nationalCode)
                 .withAccounts()
+                .withUserType(UserType.NONE)
                 .build();
-
-        Account account1 = AccountBuilder.anAccount()
-                .withAccountNumber(123456789L)
-                .withCartNumber(987654321L)
-                .withAccountType(AccountType.CURRENT)
-                .withBalance(10000000L)
-                .withCvv2(1234)
-                .withOpeningDate(new Date(2021, 12, 13))
-                .withExpirationDate(new Date(2024, 12, 13))
-                .withUser(user)
-                .withOperations()
-                .build();
-
-        Account account2 = AccountBuilder.anAccount()
-                .withAccountNumber(852963741L)
-                .withCartNumber(369852147L)
-                .withAccountType(AccountType.LONG_TERM)
-                .withBalance(20000000L)
-                .withCvv2(2525)
-                .withOpeningDate(new Date(2021, 8, 1))
-                .withExpirationDate(new Date(2024, 8, 1))
-                .withUser(user)
-                .withOperations()
-                .build();
-
-
-        Operation operation1 = OperationBuilder.aTransaction()
-                .withAccount(account1)
-                .withTransactionType(TransactionType.DEPOSIT)
-                .withAmount(10000L)
-                .build();
-
-        Operation operation2 = OperationBuilder.aTransaction()
-                .withAccount(account1)
-                .withTransactionType(TransactionType.TRANSFER)
-                .withAmount(50000L)
-                .build();
-
-
-        account1.getOperations().add(operation1);
-        account2.getOperations().add(operation2);
-
-        user.getAccounts().add(account1);
-        user.getAccounts().add(account2);
-
-
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(account2);
-        session.save(account1);
-        transaction.commit();
-        session.close();
-        sessionFactory.close();
-
+        return user;
     }
 }

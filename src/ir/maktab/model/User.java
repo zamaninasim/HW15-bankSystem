@@ -2,6 +2,7 @@ package ir.maktab.model;
 
 import ir.maktab.enumeration.UserType;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@ToString
 @Entity
 public class User {
     @Id
