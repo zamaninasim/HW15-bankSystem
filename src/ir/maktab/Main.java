@@ -1,12 +1,16 @@
 package ir.maktab;
 
 import ir.maktab.enumeration.AccountType;
+import ir.maktab.enumeration.TransactionType;
 import ir.maktab.enumeration.UserType;
 import ir.maktab.model.Account;
+import ir.maktab.model.Operation;
 import ir.maktab.model.User;
 import ir.maktab.model.builder.AccountBuilder;
+import ir.maktab.model.builder.OperationBuilder;
 import ir.maktab.model.builder.UserBuilder;
 import ir.maktab.service.AccountService;
+import ir.maktab.service.OperationService;
 import ir.maktab.service.UserService;
 
 import java.text.ParseException;
@@ -18,6 +22,7 @@ public class Main {
     static final Scanner scanner = new Scanner(System.in);
     static final UserService userService = new UserService();
     static final AccountService accountService = new AccountService();
+    static final OperationService operationService = new OperationService();
 
     public static void main(String[] args) {
 
@@ -42,9 +47,7 @@ public class Main {
                 System.out.println(userWhitThisLastname);
                 break;
             case 4:
-                System.out.println("enter cartNumber:");
-                long cartNumber = scanner.nextLong();
-                Account accountWhitThisCartNumber = accountService.readAccountByCartNumber(cartNumber);
+                Account accountWhitThisCartNumber = getAccount();
                 User userWhitThisCartNumber = accountWhitThisCartNumber.getUser();
                 System.out.println(userWhitThisCartNumber);
                 break;
@@ -69,8 +72,30 @@ public class Main {
                     e.printStackTrace();
                 }
                 break;
-
+            case 7:
+                System.out.println("Enter the desired amount to withdraw:");
+                long amount = scanner.nextLong();
+                TransactionType transactionType = TransactionType.WITHDRAW;
+                Operation operation = doOperation(amount, transactionType);
+                operationService.saveOperationService(operation);
         }
+    }
+
+    private static Operation doOperation(long amount, TransactionType transactionType) {
+        Account accountForWithdraw = getAccount();
+        Operation operation = OperationBuilder.aTransaction()
+                .withAccount(accountForWithdraw)
+                .withTransactionType(transactionType)
+                .withAmount(amount)
+                .build();
+        return operation;
+    }
+
+    private static Account getAccount() {
+        System.out.println("enter cartNumber:");
+        long cartNumber = scanner.nextLong();
+        Account accountWhitThisCartNumber = accountService.readAccountByCartNumber(cartNumber);
+        return accountWhitThisCartNumber;
     }
 
     private static User creatUser() {

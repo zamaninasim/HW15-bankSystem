@@ -13,7 +13,7 @@ public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private Account account;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
