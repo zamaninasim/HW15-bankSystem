@@ -30,7 +30,7 @@ public class User {
     @Transient
     private Map<Date, String> updates;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts;
 
     @Override
     public String toString() {

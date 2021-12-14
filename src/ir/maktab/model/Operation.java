@@ -13,11 +13,22 @@ public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.ALL)
     private Account account;
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
     private Long amount;
     @CreationTimestamp
     private Date date;
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "id=" + id +
+                ", CartNumber=" + account.getCartNumber() +
+                ", transactionType=" + transactionType +
+                ", amount=" + amount +
+                ", date=" + date +
+                '}';
+    }
 }

@@ -25,7 +25,7 @@ public class Account {
     private Date openingDate;
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "account",fetch = FetchType.EAGER)
     private List<Operation> operations = new ArrayList<>();
     @ManyToOne()
     private User user;

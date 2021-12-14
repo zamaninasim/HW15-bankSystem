@@ -16,6 +16,7 @@ import ir.maktab.service.UserService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -25,80 +26,97 @@ public class Main {
     static final OperationService operationService = new OperationService();
 
     public static void main(String[] args) {
-        System.out.println("1)Create user\n2)find user by firstname\n3)find by lastname\n" +
-                "4)find by cart number\n5)Create an account\n6)assign an account\n7)Withdraw\n8)Deposit");
-        Integer operations = scanner.nextInt();
-        switch (operations) {
-            case 1:
-                User user = creatUser();
-                userService.saveUserService(user);
-                break;
-            case 2:
-                System.out.println("enter firstname:");
-                String firstname = scanner.next();
-                User userWhitThisFirstname = userService.readUserByFirstname(firstname);
-                System.out.println(userWhitThisFirstname);
-                break;
-            case 3:
-                System.out.println("enter lastname:");
-                String lastname = scanner.next();
-                User userWhitThisLastname = userService.readUserByLastname(lastname);
-                System.out.println(userWhitThisLastname);
-                break;
-            case 4:
-                Account accountWhitThisCartNumber = getAccount();
-                User userWhitThisCartNumber = accountWhitThisCartNumber.getUser();
-                System.out.println(userWhitThisCartNumber);
-                break;
-            case 5:
-                User userForAccount = creatUser();
-                userService.saveUserService(userForAccount);
-                try {
-                    Account account = creatAccount(userForAccount);
-                    accountService.saveAccountService(account);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 6:
-                System.out.println("enter user NationalCode:");
-                String nationalCode = scanner.next();
-                User userWhitThisNationalCode = userService.readUserByNationalCode(nationalCode);
-                try {
-                    Account account = creatAccount(userWhitThisNationalCode);
-                    accountService.saveAccountService(account);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 7:
-                Account accountForWithdraw = getAccount();
-                Long balanceForWithdraw = accountForWithdraw.getBalance();
-                System.out.println("your balance is: " + balanceForWithdraw);
-                System.out.println("Enter the amount:");
-                long amount = scanner.nextLong();
-                Long newBalanceForWithdraw = balanceForWithdraw - amount;
-                TransactionType withdraw = TransactionType.WITHDRAW;
-                Operation withdrawOperation = doOperation(amount, withdraw, accountForWithdraw,newBalanceForWithdraw);
-                operationService.saveOperationService(withdrawOperation);
-                break;
-            case 8:
-                Account accountForDeposit = getAccount();
-                Long balanceForDeposit = accountForDeposit.getBalance();
-                System.out.println("your balance is: " + balanceForDeposit);
-                System.out.println("Enter the amount:");
-                long amountForDeposit = scanner.nextLong();
-                Long newBalanceForDeposit = balanceForDeposit + amountForDeposit;
-                TransactionType deposit = TransactionType.DEPOSIT;
-                Operation depositOperation = doOperation(amountForDeposit, deposit, accountForDeposit,newBalanceForDeposit);
-                operationService.saveOperationService(depositOperation);
-                break;
-        }
+        boolean exit = false;
+        do {
+            System.out.println("1)Create user\n2)find user by firstname\n3)find by lastname\n" +
+                    "4)find by cart number\n5)Create an account\n6)assign an account\n" +
+                    "7)Withdraw\n8)Deposit\n9)3last operations of account\n10)exit");
+            Integer operations = scanner.nextInt();
+            switch (operations) {
+                case 1:
+                    User user = creatUser();
+                    userService.saveUserService(user);
+                    break;
+                case 2:
+                    System.out.println("enter firstname:");
+                    String firstname = scanner.next();
+                    User userWhitThisFirstname = userService.readUserByFirstname(firstname);
+                    System.out.println(userWhitThisFirstname);
+                    break;
+                case 3:
+                    System.out.println("enter lastname:");
+                    String lastname = scanner.next();
+                    User userWhitThisLastname = userService.readUserByLastname(lastname);
+                    System.out.println(userWhitThisLastname);
+                    break;
+                case 4:
+                    Account accountWhitThisCartNumber = getAccount();
+                    User userWhitThisCartNumber = accountWhitThisCartNumber.getUser();
+                    System.out.println(userWhitThisCartNumber);
+                    break;
+                case 5:
+                    User userForAccount = creatUser();
+                    userService.saveUserService(userForAccount);
+                    try {
+                        Account account = creatAccount(userForAccount);
+                        accountService.saveAccountService(account);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 6:
+                    System.out.println("enter user NationalCode:");
+                    String nationalCode = scanner.next();
+                    User userWhitThisNationalCode = userService.readUserByNationalCode(nationalCode);
+                    try {
+                        Account account = creatAccount(userWhitThisNationalCode);
+                        accountService.saveAccountService(account);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 7:
+                    Account accountForWithdraw = getAccount();
+                    Long balanceForWithdraw = accountForWithdraw.getBalance();
+                    System.out.println("your balance is: " + balanceForWithdraw);
+                    System.out.println("Enter the amount:");
+                    long amountForWithdraw = scanner.nextLong();
+                    Long newBalanceForWithdraw = balanceForWithdraw - amountForWithdraw;
+                    TransactionType withdraw = TransactionType.WITHDRAW;
+                    Operation withdrawOperation = doOperation(amountForWithdraw, withdraw, accountForWithdraw);
+                    accountForWithdraw.setBalance(newBalanceForWithdraw);
+                    operationService.saveOperationService(withdrawOperation);
+                    accountForWithdraw.getOperations().add(withdrawOperation);
+                    accountService.updateAccountService(accountForWithdraw);
+                    break;
+                case 8:
+                    Account accountForDeposit = getAccount();
+                    Long balanceForDeposit = accountForDeposit.getBalance();
+                    System.out.println("your balance is: " + balanceForDeposit);
+                    System.out.println("Enter the amount:");
+                    long amountForDeposit = scanner.nextLong();
+                    Long newBalanceForDeposit = balanceForDeposit + amountForDeposit;
+                    TransactionType deposit = TransactionType.DEPOSIT;
+                    Operation depositOperation = doOperation(amountForDeposit, deposit, accountForDeposit);
+                    accountForDeposit.setBalance(newBalanceForDeposit);
+                    operationService.saveOperationService(depositOperation);
+                    accountForDeposit.getOperations().add(depositOperation);
+                    accountService.updateAccountService(accountForDeposit);
+                    break;
+                case 9:
+                    Account account = getAccount();
+                    List<Operation> operations1 = account.getOperations();
+                    //Integer lastGeneratedId = operations1.stream().map(i -> i.getId()).reduce((i, j) -> Integer.max(i, j)).get();
+                    operations1.stream().skip(operations1.size()-3).forEach(System.out::println);
+                    //operations1.stream().limit(3).forEach(System.out::println);
+                    break;
+                case 10:
+                    exit = true;
+            }
+        } while (!exit);
     }
 
-    private static Operation doOperation(long amount, TransactionType transactionType, Account accountForOperation,Long newBalance) {
-        accountForOperation.setBalance(newBalance);
-        accountService.updateAccountService(accountForOperation);
+    private static Operation doOperation(long amount, TransactionType transactionType, Account accountForOperation) {
         return OperationBuilder.aTransaction()
                 .withAccount(accountForOperation)
                 .withTransactionType(transactionType)
