@@ -6,13 +6,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-public class OperationDao {
-    static SessionFactory sessionFactory = new Configuration()
-            .configure().buildSessionFactory();
-    Session session = sessionFactory.openSession();
-    Transaction transaction = session.beginTransaction();
+public class OperationDao extends BaseDao {
 
     public Integer saveOperation(Operation operation) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Integer id = (Integer) session.save(operation);
         transaction.commit();
         session.close();

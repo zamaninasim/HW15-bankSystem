@@ -10,6 +10,10 @@ public class AccountService {
         accountDao.saveAccount(account);
     }
 
+    public void updateAccountService(Account account) {
+        accountDao.updateAccount(account);
+    }
+
     public Account readAccountByCartNumber(Long cartNumber) {
         Account accountWhitThisCartNumber = accountDao.findAccountByCartNumber(cartNumber);
         return accountWhitThisCartNumber;

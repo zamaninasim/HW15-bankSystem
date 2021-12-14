@@ -25,9 +25,8 @@ public class Main {
     static final OperationService operationService = new OperationService();
 
     public static void main(String[] args) {
-
         System.out.println("1)Create user\n2)find user by firstname\n3)find by lastname\n" +
-                "4)find by cart number\n5)Create an account\n6)assign an account\n7)Withdraw\n8)deposit");
+                "4)find by cart number\n5)Create an account\n6)assign an account\n7)Withdraw\n8)Deposit");
         Integer operations = scanner.nextInt();
         switch (operations) {
             case 1:
@@ -73,33 +72,48 @@ public class Main {
                 }
                 break;
             case 7:
-                System.out.println("Enter the desired amount to withdraw:");
+                Account accountForWithdraw = getAccount();
+                Long balanceForWithdraw = accountForWithdraw.getBalance();
+                System.out.println("your balance is: " + balanceForWithdraw);
+                System.out.println("Enter the amount:");
                 long amount = scanner.nextLong();
-                TransactionType transactionType = TransactionType.WITHDRAW;
-                Operation operation = doOperation(amount, transactionType);
-                operationService.saveOperationService(operation);
+                Long newBalanceForWithdraw = balanceForWithdraw - amount;
+                TransactionType withdraw = TransactionType.WITHDRAW;
+                Operation withdrawOperation = doOperation(amount, withdraw, accountForWithdraw,newBalanceForWithdraw);
+                operationService.saveOperationService(withdrawOperation);
+                break;
+            case 8:
+                Account accountForDeposit = getAccount();
+                Long balanceForDeposit = accountForDeposit.getBalance();
+                System.out.println("your balance is: " + balanceForDeposit);
+                System.out.println("Enter the amount:");
+                long amountForDeposit = scanner.nextLong();
+                Long newBalanceForDeposit = balanceForDeposit + amountForDeposit;
+                TransactionType deposit = TransactionType.DEPOSIT;
+                Operation depositOperation = doOperation(amountForDeposit, deposit, accountForDeposit,newBalanceForDeposit);
+                operationService.saveOperationService(depositOperation);
+                break;
         }
     }
 
-    private static Operation doOperation(long amount, TransactionType transactionType) {
-        Account accountForWithdraw = getAccount();
-        Operation operation = OperationBuilder.aTransaction()
-                .withAccount(accountForWithdraw)
+    private static Operation doOperation(long amount, TransactionType transactionType, Account accountForOperation,Long newBalance) {
+        accountForOperation.setBalance(newBalance);
+        accountService.updateAccountService(accountForOperation);
+        return OperationBuilder.aTransaction()
+                .withAccount(accountForOperation)
                 .withTransactionType(transactionType)
                 .withAmount(amount)
                 .build();
-        return operation;
     }
 
     private static Account getAccount() {
         System.out.println("enter cartNumber:");
         long cartNumber = scanner.nextLong();
-        Account accountWhitThisCartNumber = accountService.readAccountByCartNumber(cartNumber);
-        return accountWhitThisCartNumber;
+        return accountService.readAccountByCartNumber(cartNumber);
     }
 
     private static User creatUser() {
-        System.out.println("enter user info:(firstname,lastname,nationalCode");
+        System.out.println("enter user info:firstname,lastname,nationalCode");
         //TODO
         String userInfo = scanner.next();
         String[] splitedInfo = userInfo.split(",");
@@ -107,14 +121,13 @@ public class Main {
         String lastname = splitedInfo[1];
         String nationalCode = splitedInfo[2];
 
-        User user = UserBuilder.anUser()
+        return UserBuilder.anUser()
                 .withFirstName(firstname)
                 .withLastName(lastname)
                 .withNationalCode(nationalCode)
                 .withAccounts()
                 .withUserType(UserType.NONE)
                 .build();
-        return user;
     }
 
     private static Account creatAccount(User user) throws ParseException {
@@ -127,15 +140,16 @@ public class Main {
         Long balance = Long.parseLong(splitAccountInfo[2]);
         Integer cvv2 = Integer.parseInt(splitAccountInfo[3]);
 
-        System.out.println("enter OpeningDate:(like this:2021-08-01");
+        System.out.println("enter openingDate:(like this:2021-08-01");
         String openingDate = scanner.next();
         Date parseOpeningDate = new SimpleDateFormat("yyyy-MM-dd").parse(openingDate);
+        System.out.println("enter expirationDate:(like this:2021-08-01");
         String expirationDate = scanner.next();
         Date parseExpirationDate = new SimpleDateFormat("yyyy-MM-dd").parse(expirationDate);
 
         AccountType accountType = returnAccountType();
 
-        Account account = AccountBuilder.anAccount()
+        return AccountBuilder.anAccount()
                 .withAccountNumber(accountNumber)
                 .withCartNumber(cartNumber)
                 .withAccountType(accountType)
@@ -146,7 +160,6 @@ public class Main {
                 .withUser(user)
                 .withOperations()
                 .build();
-        return account;
     }
 
     private static AccountType returnAccountType() {

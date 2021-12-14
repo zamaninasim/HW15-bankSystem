@@ -11,13 +11,12 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-public class AccountDao {
-    static SessionFactory sessionFactory = new Configuration()
-            .configure().buildSessionFactory();
-    Session session = sessionFactory.openSession();
-    Transaction transaction = session.beginTransaction();
+public class AccountDao extends BaseDao {
+
 
     public Integer saveAccount(Account account) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Integer id = (Integer) session.save(account);
         transaction.commit();
         session.close();
@@ -25,10 +24,22 @@ public class AccountDao {
     }
 
     public Account findAccountByCartNumber(Long cartNumber){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Criteria criteria = session.createCriteria(Account.class);
         criteria.add(Restrictions.eq("cartNumber",cartNumber));
         List<Account> list = criteria.list();
         Account account = list.get(0);
+        transaction.commit();
+        session.close();
         return account;
+    }
+
+    public void updateAccount(Account account) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(account);
+        transaction.commit();
+        session.close();
     }
 }

@@ -7,14 +7,12 @@ import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
-public class UserDao {
-    static SessionFactory sessionFactory = new Configuration()
-            .configure().buildSessionFactory();
+public class UserDao extends BaseDao {
 
-    Session session = sessionFactory.openSession();
-    Transaction transaction = session.beginTransaction();
 
     public Integer saveUser(User user) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Integer id = (Integer) session.save(user);
         transaction.commit();
         session.close();
@@ -22,26 +20,38 @@ public class UserDao {
     }
 
     public User findUserByFirstname(String firstname){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.eq("firstName",firstname));
         List<User> list = criteria.list();
         User user = list.get(0);
+        transaction.commit();
+        session.close();
         return user;
     }
 
     public User findUserByLastname(String lastname){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.eq("lastName",lastname));
         List<User> list = criteria.list();
         User user = list.get(0);
+        transaction.commit();
+        session.close();
         return user;
     }
 
     public User findUserByNationalCode(String nationalCode){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         Criteria criteria = session.createCriteria(User.class);
         criteria.add(Restrictions.eq("nationalCode",nationalCode));
         List<User> list = criteria.list();
         User user = list.get(0);
+        transaction.commit();
+        session.close();
         return user;
     }
 }
