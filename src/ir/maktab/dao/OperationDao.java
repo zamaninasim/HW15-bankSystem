@@ -2,9 +2,7 @@ package ir.maktab.dao;
 
 import ir.maktab.model.Operation;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 
 public class OperationDao extends BaseDao {
 
@@ -15,5 +13,14 @@ public class OperationDao extends BaseDao {
         transaction.commit();
         session.close();
         return id;
+    }
+
+    public Operation getById(Integer id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Operation operation = session.get(Operation.class, id);
+        transaction.commit();
+        session.close();
+        return operation;
     }
 }

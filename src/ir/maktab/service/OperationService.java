@@ -10,4 +10,7 @@ public class OperationService {
         operationDao.saveOperation(operation);
     }
 
+    public Operation getById(Integer id) {
+        return operationDao.getById(id);
+    }
 }

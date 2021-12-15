@@ -5,16 +5,19 @@ import ir.maktab.enumeration.TransactionType;
 import ir.maktab.enumeration.UserType;
 import ir.maktab.model.Account;
 import ir.maktab.model.Operation;
+import ir.maktab.model.Update;
 import ir.maktab.model.User;
 import ir.maktab.model.builder.AccountBuilder;
 import ir.maktab.model.builder.OperationBuilder;
 import ir.maktab.model.builder.UserBuilder;
 import ir.maktab.service.AccountService;
 import ir.maktab.service.OperationService;
+import ir.maktab.service.UpdateService;
 import ir.maktab.service.UserService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -24,8 +27,10 @@ public class Main {
     static final UserService userService = new UserService();
     static final AccountService accountService = new AccountService();
     static final OperationService operationService = new OperationService();
+    static final UpdateService updateService = new UpdateService();
 
     public static void main(String[] args) {
+
         boolean exit = false;
         do {
             System.out.println("1)Create user\n2)find user by firstname\n3)find by lastname\n" +
@@ -35,18 +40,18 @@ public class Main {
             switch (operations) {
                 case 1:
                     User user = creatUser();
-                    userService.saveUserService(user);
+                    Main.userService.saveUserService(user);
                     break;
                 case 2:
                     System.out.println("enter firstname:");
                     String firstname = scanner.next();
-                    User userWhitThisFirstname = userService.readUserByFirstname(firstname);
+                    User userWhitThisFirstname = Main.userService.readUserByFirstname(firstname);
                     System.out.println(userWhitThisFirstname);
                     break;
                 case 3:
                     System.out.println("enter lastname:");
                     String lastname = scanner.next();
-                    User userWhitThisLastname = userService.readUserByLastname(lastname);
+                    User userWhitThisLastname = Main.userService.readUserByLastname(lastname);
                     System.out.println(userWhitThisLastname);
                     break;
                 case 4:
@@ -56,7 +61,7 @@ public class Main {
                     break;
                 case 5:
                     User userForAccount = creatUser();
-                    userService.saveUserService(userForAccount);
+                    Main.userService.saveUserService(userForAccount);
                     try {
                         Account account = creatAccount(userForAccount);
                         accountService.saveAccountService(account);
@@ -67,7 +72,7 @@ public class Main {
                 case 6:
                     System.out.println("enter user NationalCode:");
                     String nationalCode = scanner.next();
-                    User userWhitThisNationalCode = userService.readUserByNationalCode(nationalCode);
+                    User userWhitThisNationalCode = Main.userService.readUserByNationalCode(nationalCode);
                     try {
                         Account account = creatAccount(userWhitThisNationalCode);
                         accountService.saveAccountService(account);
@@ -87,6 +92,9 @@ public class Main {
                     accountForWithdraw.setBalance(newBalanceForWithdraw);
                     operationService.saveOperationService(withdrawOperation);
                     accountForWithdraw.getOperations().add(withdrawOperation);
+                    Update updateWithdraw = new Update();
+                    updateWithdraw.setMassage("Account whit " + accountForWithdraw.getCartNumber() + "cart number Withdraw " + amountForWithdraw);
+                    updateService.save(updateWithdraw);
                     accountService.updateAccountService(accountForWithdraw);
                     break;
                 case 8:
@@ -101,14 +109,21 @@ public class Main {
                     accountForDeposit.setBalance(newBalanceForDeposit);
                     operationService.saveOperationService(depositOperation);
                     accountForDeposit.getOperations().add(depositOperation);
+                    Update updateDeposit = new Update();
+                    updateDeposit.setMassage("Account whit " + accountForDeposit.getCartNumber() + "cart number Withdraw " + amountForDeposit);
+                    updateService.save(updateDeposit);
                     accountService.updateAccountService(accountForDeposit);
                     break;
                 case 9:
                     Account account = getAccount();
-                    List<Operation> operations1 = account.getOperations();
-                    //Integer lastGeneratedId = operations1.stream().map(i -> i.getId()).reduce((i, j) -> Integer.max(i, j)).get();
-                    operations1.stream().skip(operations1.size()-3).forEach(System.out::println);
-                    //operations1.stream().limit(3).forEach(System.out::println);
+                    List<Operation> allOperations = account.getOperations();
+                    List<Integer> lastIds = allOperations.stream().map(i -> i.getId()).sorted((i, j) -> Integer.compare(j, i)).limit(3).toList();
+                    List<Operation> threeLastOperations = new ArrayList<>();
+                    for (Integer id : lastIds) {
+                        Operation operationById = operationService.getById(id);
+                        threeLastOperations.add(operationById);
+                    }
+                    System.out.println(threeLastOperations);
                     break;
                 case 10:
                     exit = true;
